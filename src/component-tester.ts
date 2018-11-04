@@ -10,9 +10,17 @@ interface ViewWithControllers extends View {
   controllers: {viewModel: any}[];
 }
 
+export type IConstructable<T = any> = new (...args: any[]) => T;
+
+export type IResource = string | IConstructable;
+
 export class StageComponent {
-  public static withResources<T = any>(resources: string | string[] = []): ComponentTester<T> {
+  public static withResources<T = any>(resources: IResource | IResource[] = []): ComponentTester<T> {
     return new ComponentTester().withResources(resources);
+  }
+
+  public static inView<T = any>(view: string): ComponentTester<T> {
+    return new ComponentTester().inView(view);
   }
 }
 
@@ -25,7 +33,7 @@ export class ComponentTester<T = any> {
   public viewModel: T;
 
   private html: string;
-  private resources: string | string[] = [];
+  private resources: IResource | IResource[] = [];
   private bindingContext: {};
   private rootView: View;
   private host: HTMLDivElement;
@@ -38,7 +46,7 @@ export class ComponentTester<T = any> {
     this.configure = configure;
   }
 
-  public withResources(resources: string | string[]): ComponentTester<T> {
+  public withResources(resources: IResource | IResource[]): ComponentTester<T> {
     this.resources = resources;
     return this;
   }

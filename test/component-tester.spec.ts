@@ -18,6 +18,15 @@ describe('ComponentTester', () => {
       .boundTo({ firstName: 'Bob' });
   });
 
+  it('add static resources', () => {
+    class Abc { public static $view = null; }
+    component = new ComponentTester().withResources([Abc]).inView('<abc></abc>');
+    return component.create(bootstrap)
+      .then(() => {
+        expect(component.viewModel instanceof Abc).toBe(true);
+      });
+  });
+
   it('should wait for a child element', (done) => {
     component.create(bootstrap)
       .then(() => {
